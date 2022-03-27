@@ -1,3 +1,6 @@
+# 수정자 Lamed
+패스워드 시스템 추가
+Loader.c만 
 # Overview
 EfiGuard is a portable x64 UEFI bootkit that patches the Windows boot manager, boot loader and kernel at boot time in order to disable PatchGuard and Driver Signature Enforcement (DSE).
 
