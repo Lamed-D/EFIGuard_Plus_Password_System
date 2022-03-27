@@ -339,6 +339,70 @@ StartAndConfigureDriver(
 		goto Exit;
 	}
 
+	//Lamed Plus (Password System)
+	Print(L"\r\nLamed Password System");
+	Print(L"\r\nInput Password: \n");
+	//
+	UINT16 SelectedChar[5];
+	UINT16 count = 0;
+	CONST UINT16 AcceptedKeys[] = { L'1', L'2', L'3', L'4', L'5', L'6', L'7', L'8', L'9', L'0' };
+	while (TRUE)
+	{
+		SelectedChar[4] = CHAR_NULL;
+		SelectedChar[count] = CHAR_NULL;
+
+		EFI_INPUT_KEY Key = { 0, 0 };
+		UINTN Index = 0;
+		gBS->WaitForEvent(1, &gST->ConIn->WaitForKey, &Index);
+		gST->ConIn->ReadKeyStroke(gST->ConIn, &Key);
+
+		if (Key.UnicodeChar == CHAR_LINEFEED || Key.UnicodeChar == CHAR_CARRIAGE_RETURN)
+		{
+			//SelectedChar = DefaultSelection;
+			if (StrCmp(SelectedChar, L"1234") == 0)
+				break;
+			else
+				Print(L"\rWrongPassword");
+			continue;
+		}
+
+		if (Key.UnicodeChar == CHAR_BACKSPACE)
+		{
+			if (count != 0)
+			{
+				count--;
+				SelectedChar[count] = CHAR_NULL;
+				//Print(L"\n\rBackSpace"); Debug용
+				Print(L"\r%s             ", SelectedChar);
+			}
+			continue;
+		}
+
+		for (UINTN i = 0; i < sizeof(AcceptedKeys) / sizeof(UINT16); ++i)
+		{
+			if (Key.UnicodeChar == AcceptedKeys[i])
+			{
+				if (count < 4)
+				{
+					SelectedChar[count] = Key.UnicodeChar;
+					count++;
+					//SelectedChar[4] = CHAR_NULL; 테스트용
+					Print(L"\r%s             ", SelectedChar);
+				}
+				break;
+			}
+		}
+
+		Print(L"\r%s             ", SelectedChar);
+
+		//if (SelectedChar[count] != CHAR_NULL)
+		//{
+		//	continue;
+		//}
+	}
+	Print(L"\n");
+	//
+
 #if CONFIGURE_DRIVER
 	//
 	// Interactive driver configuration
